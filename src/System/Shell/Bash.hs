@@ -145,11 +145,13 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
       convTest (SH.TFileExists v) =
         Unary
           FileExists
-          (termToWord (SH.quote v))
+          (termToWord v)
       convTest (SH.TDirExists v) =
         Unary
           Directory
-          (termToWord (SH.quote v))
+          (termToWord v)
+      convTest (SH.TSymbolicLink v) =
+        Unary SymbolicLink (termToWord v)
 
   setVar v =
     BS
@@ -193,7 +195,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
               SH.In -> In
               SH.Out -> Out
               SH.Append -> Append,
-            redirTarget = termToWord (SH.quote t)
+            redirTarget = termToWord t
           }
   group (BS c) =
     BS

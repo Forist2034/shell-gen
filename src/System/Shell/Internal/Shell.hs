@@ -118,6 +118,7 @@ data Test t m
   | TOr (Test t m) (Test t m)
   | TFileExists (Term t m)
   | TDirExists (Term t m)
+  | TSymbolicLink (Term t m)
 
 data AndOrTerm m
   = AoCmd (m ())
