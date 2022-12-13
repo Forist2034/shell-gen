@@ -103,6 +103,7 @@ termToWord (SH.QuotedTerm t) =
   where
     conv (QStr s) = Str s
     conv (QEscape c) = Escape c
+termToWord (SH.ConcatTerm t) = foldMap termToWord t
 
 convAssign :: (SH.Shell t m, Quotable t) => Bool -> SH.Assign t m -> Assign t
 convAssign q (SH.Assign n t) =

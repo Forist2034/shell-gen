@@ -70,10 +70,17 @@ data Term t m
   | ArithTerm (Arith t)
   | OutputTerm (m ())
   | QuotedTerm [Term t m]
+  | ConcatTerm [Term t m]
 
 instance (IsString t) => IsString (Term t m) where
   fromString s = QuotedTerm [StrTerm (fromString s)]
   {-# INLINE fromString #-}
+
+instance Semigroup (Term t m) where
+  ConcatTerm l <> ConcatTerm r = ConcatTerm (l ++ r)
+  ConcatTerm l <> r = ConcatTerm (l ++ [r])
+  l <> ConcatTerm r = ConcatTerm (l : r)
+  l <> r = ConcatTerm [l, r]
 
 var :: Var t -> Term t m
 var = VarTerm . varName
