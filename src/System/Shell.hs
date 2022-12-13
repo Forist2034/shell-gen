@@ -11,6 +11,7 @@ module System.Shell
     Assign,
     (@=),
     Test (..),
+    ShellStr(..),
     Shell (..),
     (|>),
     (|>>),
