@@ -1,0 +1,38 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           shell-gen
+version:        0.1.0.0
+synopsis:       Generate shell script from haskell
+author:         Jose Lane
+maintainer:     Jose Lane
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+
+library
+  exposed-modules:
+      System.Shell
+      System.Shell.Bash
+      System.Shell.Str
+  other-modules:
+      System.Shell.Internal.Bash.Cond
+      System.Shell.Internal.Bash.Pretty
+      System.Shell.Internal.Bash.Syntax
+      System.Shell.Internal.Bash.Word
+      System.Shell.Internal.Printer
+      System.Shell.Internal.Shell
+  hs-source-dirs:
+      src
+  default-extensions:
+      OverloadedStrings
+      MultiParamTypeClasses
+      FlexibleInstances
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.6 && <5
+    , mtl >=2.2 && <3
+  default-language: Haskell2010

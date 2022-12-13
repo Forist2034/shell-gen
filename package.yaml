@@ -1,0 +1,35 @@
+name: shell-gen
+version: 0.1.0.0
+license: BSD3
+author: "Jose Lane"
+synopsis: Generate shell script from haskell
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wmissing-export-lists
+  - -Wmissing-home-modules
+  - -Wpartial-fields
+  - -Wredundant-constraints
+
+default-extensions:
+  - OverloadedStrings
+  - MultiParamTypeClasses
+  - FlexibleInstances
+
+dependencies:
+  - base >= 4.6 && < 5
+  - mtl >= 2.2 && < 3
+
+library:
+  source-dirs: src
+  other-modules:
+    - System.Shell.Internal.Bash.Cond
+    - System.Shell.Internal.Bash.Pretty
+    - System.Shell.Internal.Bash.Syntax
+    - System.Shell.Internal.Bash.Word
+    - System.Shell.Internal.Printer
+    - System.Shell.Internal.Shell
