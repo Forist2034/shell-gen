@@ -11,7 +11,7 @@ module System.Shell
     Assign,
     (@=),
     Test (..),
-    ShellStr(..),
+    ShellStr (..),
     Shell (..),
     (|>),
     (|>>),
@@ -76,7 +76,7 @@ localVar t@(Assign n _) = localVars [t] >> return (Var n)
 newEnv :: Shell t m => Assign t m -> m (Var t)
 newEnv t@(Assign n _) = newEnvs [t] >> return (Var n)
 
-forCmdVar :: Shell t m => t -> [Term t m] -> (Term t m -> m ()) -> m ()
+forCmdVar :: Shell t m => t -> [Term t m] -> (Var t -> m ()) -> m ()
 forCmdVar t ts b =
   localVar (Var t @= "") >>= \vt ->
-    forCmd t ts (b (var vt))
+    forCmd t ts (b vt)
