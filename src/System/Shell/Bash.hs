@@ -27,7 +27,7 @@ data Quoted t
   deriving (Show)
 
 quoteChar :: Char -> Bool
-quoteChar c = c == '$' || c == '\\' || c == '`'
+quoteChar c = c == '$' || c == '\\' || c == '`' || c == '"'
 
 class Quotable t where
   quote :: t -> [Quoted t]
@@ -88,6 +88,7 @@ arithToStr t = toStr (conv True t)
 termToWord :: (SH.Shell t m, Quotable t) => SH.Term t m -> Word t
 termToWord (SH.StrTerm t) = [Str t]
 termToWord (SH.ArithTerm at) = [ArithSubst (arithToStr at)]
+termToWord SH.EmptyTerm = []
 termToWord (SH.VarTerm v) = [ParamSubst (Brace False (Parameter v Nothing))]
 termToWord (SH.OutputTerm o) = [CommandSubst (SH.script o)]
 termToWord (SH.QuotedTerm t) =

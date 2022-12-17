@@ -1,5 +1,6 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module System.Shell.Internal.Shell
   ( Var (..),
@@ -67,6 +68,7 @@ instance Num (Arith t) where
 data Term t m
   = StrTerm t
   | VarTerm t
+  | EmptyTerm
   | ArithTerm (Arith t)
   | OutputTerm (m ())
   | QuotedTerm [Term t m]
@@ -81,6 +83,29 @@ instance Semigroup (Term t m) where
   ConcatTerm l <> r = ConcatTerm (l ++ [r])
   l <> ConcatTerm r = ConcatTerm (l : r)
   l <> r = ConcatTerm [l, r]
+
+instance Monoid (Term t m) where
+  mempty = EmptyTerm
+
+newtype TermBuilder t m = TB {getTB :: [Term t m] -> [Term t m]}
+
+instance (IsString t) => IsString (TermBuilder t m) where
+  fromString s = TB (fromString s :)
+  {-# INLINE fromString #-}
+
+instance Semigroup (TermBuilder t m) where
+  TB l <> TB r = TB (l . r)
+
+instance Monoid (TermBuilder t m) where
+  mempty = TB id
+
+instance (ShellStr t) => ShellStr (Term t m) where
+  type Builder (Term t m) = TermBuilder t m
+  fromStr s = TB (s :)
+  toStr b = case getTB b [] of
+    [] -> EmptyTerm
+    [x] -> x
+    x -> ConcatTerm x
 
 var :: Var t -> Term t m
 var = VarTerm . varName
