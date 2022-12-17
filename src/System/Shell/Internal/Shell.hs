@@ -170,4 +170,4 @@ class (ShellStr t, Monad m) => Shell t m | m -> t where
   forCmd :: t -> [Term t m] -> m () -> m ()
   whileCmd :: m () -> m () -> m ()
   funcDef :: t -> m a -> m (Term t m)
-  script :: m () -> t
+  script :: Maybe t -> m () -> t

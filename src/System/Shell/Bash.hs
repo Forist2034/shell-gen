@@ -90,7 +90,7 @@ termToWord (SH.StrTerm t) = [Str t]
 termToWord (SH.ArithTerm at) = [ArithSubst (arithToStr at)]
 termToWord SH.EmptyTerm = []
 termToWord (SH.VarTerm v) = [ParamSubst (Brace False (Parameter v Nothing))]
-termToWord (SH.OutputTerm o) = [CommandSubst (SH.script o)]
+termToWord (SH.OutputTerm o) = [CommandSubst (SH.script Nothing o)]
 termToWord (SH.QuotedTerm t) =
   [ Double
       ( foldMap
@@ -345,6 +345,6 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
           )
           >> return (SH.StrTerm name)
       )
-  script c =
+  script sh c =
     let cmd = runBS False c
-     in renderDoc (vcat (fmap pretty cmd))
+     in renderDoc (maybe Empty (\v -> "#!" <> text v <> line) sh <> vcat (fmap pretty cmd))
