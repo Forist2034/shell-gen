@@ -143,6 +143,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
       convTest (SH.TNot t1) = Not (convTest t1)
       convTest (SH.TAnd l r) = C.And (convTest l) (convTest r)
       convTest (SH.TOr l r) = C.Or (convTest l) (convTest r)
+      convTest (SH.TRegularFile f) = Unary RegularFile (termToWord f)
       convTest (SH.TFileExists v) =
         Unary
           FileExists
@@ -157,6 +158,8 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
         Binary (termToWord l) StrEQ (termToWord r)
       convTest (SH.TStrNotEqual l r) =
         Binary (termToWord l) StrNE (termToWord r)
+      convTest (SH.TStrMatch l r) =
+        Binary (termToWord l) StrMatch (termToWord r)
 
   setVar v =
     BS

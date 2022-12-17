@@ -141,11 +141,13 @@ data Test t m
   = TNot (Test t m)
   | TAnd (Test t m) (Test t m)
   | TOr (Test t m) (Test t m)
+  | TRegularFile (Term t m)
   | TFileExists (Term t m)
   | TDirExists (Term t m)
   | TSymbolicLink (Term t m)
   | TStrEqual (Term t m) (Term t m)
   | TStrNotEqual (Term t m) (Term t m)
+  | TStrMatch (Term t m) (Term t m)
 
 data AndOrTerm m
   = AoCmd (m ())
