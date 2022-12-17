@@ -144,6 +144,8 @@ data Test t m
   | TFileExists (Term t m)
   | TDirExists (Term t m)
   | TSymbolicLink (Term t m)
+  | TStrEqual (Term t m) (Term t m)
+  | TStrNotEqual (Term t m) (Term t m)
 
 data AndOrTerm m
   = AoCmd (m ())

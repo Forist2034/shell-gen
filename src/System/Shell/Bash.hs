@@ -153,6 +153,10 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
           (termToWord v)
       convTest (SH.TSymbolicLink v) =
         Unary SymbolicLink (termToWord v)
+      convTest (SH.TStrEqual l r) =
+        Binary (termToWord l) StrEQ (termToWord r)
+      convTest (SH.TStrNotEqual l r) =
+        Binary (termToWord l) StrNE (termToWord r)
 
   setVar v =
     BS
