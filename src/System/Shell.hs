@@ -8,6 +8,9 @@ module System.Shell
     varLength,
     varSuffix,
     varSubstr,
+    TrimMatch (..),
+    varTrimPrefix,
+    varTrimSuffix,
     output,
     quote,
     quoteTerms,
@@ -49,6 +52,12 @@ varSuffix (Var v) o = VarTerm v (Suffix o)
 
 varSubstr :: Var t -> Term t m -> Term t m -> Term t m
 varSubstr (Var v) o l = VarTerm v (Substr o l)
+
+varTrimPrefix :: Var t -> TrimMatch -> Term t m -> Term t m
+varTrimPrefix (Var v) tm p = VarTerm v (TrimPrefix tm p)
+
+varTrimSuffix :: Var t -> TrimMatch -> Term t m -> Term t m
+varTrimSuffix (Var v) tm p = VarTerm v (TrimSuffix tm p)
 
 (@=) :: Var t -> Term t m2 -> Assign t m2
 (Var a) @= b = Assign a b

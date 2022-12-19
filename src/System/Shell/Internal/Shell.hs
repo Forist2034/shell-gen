@@ -6,6 +6,7 @@
 module System.Shell.Internal.Shell
   ( Var (..),
     Arith (..),
+    TrimMatch (..),
     VarTerm (..),
     Term (..),
     var,
@@ -67,11 +68,18 @@ instance Num (Arith t) where
   negate = ANot
   fromInteger = ANum . fromInteger
 
+data TrimMatch
+  = LongestM
+  | ShortestM
+  deriving (Eq)
+
 data VarTerm t m
   = NormalVar
   | VarLength
   | Suffix (Term t m)
   | Substr (Term t m) (Term t m)
+  | TrimPrefix TrimMatch (Term t m)
+  | TrimSuffix TrimMatch (Term t m)
 
 data Term t m
   = StrTerm t

@@ -112,6 +112,28 @@ termToWord (SH.VarTerm v t) = case t of
             }
         )
     ]
+  SH.TrimPrefix o p ->
+    [ ParamSubst
+        ( Delete
+            { indirect = False,
+              parameter = Parameter v Nothing,
+              longest = o == SH.LongestM,
+              deleteDirection = Front,
+              pattern = termToWord p
+            }
+        )
+    ]
+  SH.TrimSuffix o p ->
+    [ ParamSubst
+        ( Delete
+            { indirect = False,
+              parameter = Parameter v Nothing,
+              longest = o == SH.LongestM,
+              deleteDirection = Back,
+              pattern = termToWord p
+            }
+        )
+    ]
 termToWord (SH.OutputTerm o) = [CommandSubst (SH.script Nothing o)]
 termToWord (SH.QuotedTerm t) =
   [ Double
