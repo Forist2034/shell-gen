@@ -128,12 +128,12 @@ termToWord (SH.QuotedTerm t) =
     conv (QEscape c) = Escape c
 termToWord (SH.ConcatTerm t) = foldMap termToWord t
 
-convAssign :: (SH.Shell t m, Quotable t) => Bool -> SH.Assign t m -> Assign t
-convAssign q (SH.Assign n t) =
+convAssign :: (SH.Shell t m, Quotable t) => SH.Assign t m -> Assign t
+convAssign (SH.Assign n t) =
   Assign
     (Parameter n Nothing)
     Equals
-    (RValue (termToWord (if q then SH.quote t else t)))
+    (RValue (termToWord t))
 
 convToList :: [Command t] -> List t
 convToList cs =
@@ -187,7 +187,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
     BS
       ( tell
           ( Cmd
-              [Command (AssignBuiltin [] [Left (convAssign False v)]) []]
+              [Command (AssignBuiltin [] [Left (convAssign v)]) []]
           )
       )
   unsetVars ts = SH.runCmd [] "unset" (fmap SH.StrTerm ts)
@@ -197,7 +197,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
           ( Cmd
               [ Command
                   ( SimpleCommand
-                      (fmap (convAssign True) ass)
+                      (fmap convAssign ass)
                       (termToWord cmd : fmap termToWord arg)
                   )
                   []
@@ -241,7 +241,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
                 [ Command
                     ( AssignBuiltin
                         (if inFun then [Str "local"] else [Str "declare"])
-                        (fmap (Left . convAssign False) a)
+                        (fmap (Left . convAssign) a)
                     )
                     []
                 ]
@@ -254,7 +254,7 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
               [ Command
                   ( AssignBuiltin
                       [Str "export"]
-                      (fmap (Left . convAssign True) a)
+                      (fmap (Left . convAssign) a)
                   )
                   []
               ]

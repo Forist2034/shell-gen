@@ -82,7 +82,7 @@ data Term t m
   | ConcatTerm [Term t m]
 
 instance (IsString t) => IsString (Term t m) where
-  fromString s = QuotedTerm [StrTerm (fromString s)]
+  fromString s = StrTerm (fromString s)
   {-# INLINE fromString #-}
 
 instance Semigroup (Term t m) where
