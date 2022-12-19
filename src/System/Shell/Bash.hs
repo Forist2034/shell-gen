@@ -208,6 +208,8 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
   group (BS c) =
     BS
       (censor (\(Cmd v) -> Cmd [Command (Group (convToList (reverse v))) []]) c)
+  subShell (BS c) =
+    BS (censor (\(Cmd v) -> Cmd [Command (Subshell (convToList (reverse v))) []]) c)
   localVars a =
     BS
       ( do

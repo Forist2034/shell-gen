@@ -165,6 +165,7 @@ class (ShellStr t, Monad m) => Shell t m | m -> t where
   runCmd :: [Assign t m] -> Term t m -> [Term t m] -> m ()
   redir :: m () -> [Redir t m] -> m ()
   group :: m () -> m ()
+  subShell :: m () -> m ()
   localVars :: [Assign t m] -> m ()
   newEnvs :: [Assign t m] -> m ()
   pipe :: [m ()] -> m ()
