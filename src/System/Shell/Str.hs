@@ -16,3 +16,19 @@ class
   type Builder t
   fromStr :: t -> Builder t
   toStr :: Builder t -> t
+
+newtype StringBuilder = SB {runSB :: String -> String}
+
+instance IsString StringBuilder where
+  fromString s = SB (s ++)
+
+instance Semigroup StringBuilder where
+  SB l <> SB r = SB (l . r)
+
+instance Monoid StringBuilder where
+  mempty = SB id
+
+instance ShellStr String where
+  type Builder String = StringBuilder
+  fromStr = fromString
+  toStr s = runSB s []

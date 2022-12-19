@@ -89,7 +89,29 @@ termToWord :: (SH.Shell t m, Quotable t) => SH.Term t m -> Word t
 termToWord (SH.StrTerm t) = [Str t]
 termToWord (SH.ArithTerm at) = [ArithSubst (arithToStr at)]
 termToWord SH.EmptyTerm = []
-termToWord (SH.VarTerm v) = [ParamSubst (Brace False (Parameter v Nothing))]
+termToWord (SH.VarTerm v t) = case t of
+  SH.NormalVar -> [ParamSubst (Brace False (Parameter v Nothing))]
+  SH.VarLength -> [ParamSubst (Length (Parameter v Nothing))]
+  SH.Suffix o ->
+    [ ParamSubst
+        ( Substring
+            { indirect = False,
+              parameter = Parameter v Nothing,
+              subOffset = termToWord o,
+              subLength = []
+            }
+        )
+    ]
+  SH.Substr o l ->
+    [ ParamSubst
+        ( Substring
+            { indirect = False,
+              parameter = Parameter v Nothing,
+              subOffset = termToWord o,
+              subLength = termToWord l
+            }
+        )
+    ]
 termToWord (SH.OutputTerm o) = [CommandSubst (SH.script Nothing o)]
 termToWord (SH.QuotedTerm t) =
   [ Double

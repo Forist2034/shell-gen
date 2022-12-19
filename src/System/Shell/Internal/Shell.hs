@@ -5,6 +5,7 @@
 module System.Shell.Internal.Shell
   ( Var (..),
     Arith (..),
+    VarTerm (..),
     Term (..),
     var,
     output,
@@ -65,9 +66,15 @@ instance Num (Arith t) where
   negate = ANot
   fromInteger = ANum . fromInteger
 
+data VarTerm t m
+  = NormalVar
+  | VarLength
+  | Suffix (Term t m)
+  | Substr (Term t m) (Term t m)
+
 data Term t m
   = StrTerm t
-  | VarTerm t
+  | VarTerm t (VarTerm t m)
   | EmptyTerm
   | ArithTerm (Arith t)
   | OutputTerm (m ())
@@ -108,7 +115,7 @@ instance (ShellStr t) => ShellStr (Term t m) where
     x -> ConcatTerm x
 
 var :: Var t -> Term t m
-var = VarTerm . varName
+var (Var v) = VarTerm v NormalVar
 
 output :: m () -> Term t m
 output = OutputTerm

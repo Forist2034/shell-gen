@@ -5,6 +5,9 @@ module System.Shell
     str,
     arith,
     var,
+    varLength,
+    varSuffix,
+    varSubstr,
     output,
     quote,
     quoteTerms,
@@ -36,6 +39,15 @@ str = StrTerm
 
 arith :: Arith t -> Term t m
 arith = ArithTerm
+
+varLength :: Var t -> Term t m
+varLength (Var v) = VarTerm v VarLength
+
+varSuffix :: Var t -> Term t m -> Term t m
+varSuffix (Var v) o = VarTerm v (Suffix o)
+
+varSubstr :: Var t -> Term t m -> Term t m -> Term t m
+varSubstr (Var v) o l = VarTerm v (Substr o l)
 
 (@=) :: Var t -> Term t m2 -> Assign t m2
 (Var a) @= b = Assign a b
