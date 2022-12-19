@@ -101,7 +101,7 @@ punctuate a (x : xs) = (x <> a) : punctuate a xs
 class (IsString t) => Pretty v t where
   pretty :: v -> Doc t
   prettyList :: [v] -> Doc t
-  prettyList = hcat . fmap pretty
+  prettyList = hsep . fmap pretty
 
 instance (IsString t) => Pretty Char t where
   pretty c = text (fromString [c])
