@@ -70,7 +70,7 @@ instance (IsString t) => Pretty (Span t) t where
   pretty (ProcessSubst c s) = pretty c <> "(" <> text s <> ")"
 
 instance (IsString t) => Pretty [Span t] t where
-  pretty = hsep . fmap pretty
+  pretty = hcat . fmap pretty
 
 instance (IsString t) => Pretty [[Span t]] t where
   pretty = prettyList
