@@ -19,6 +19,7 @@ module System.Shell
     (|>),
     (|>>),
     (<|),
+    (<<|),
     (-|-),
     aoTerm,
     notC,
@@ -60,6 +61,9 @@ c |>> t = redir c [Redir Append t]
 
 (<|) :: (Shell t m) => m () -> Term t m -> m ()
 c <| t = redir c [Redir In t]
+
+(<<|) :: Shell t m => m () -> Term t m -> m ()
+c <<| t = redir c [RedirStr t]
 
 (-|-) :: Shell t m => m () -> m () -> m ()
 l -|- r = pipe [l, r]

@@ -324,7 +324,7 @@ instance (IsString t) => Pretty RedirOp t where
     Append -> ">>"
     AndOut -> "&>"
     AndAppend -> "&>>"
-    HereString -> "<&"
+    HereString -> "<<<"
     InAnd -> "<&"
     OutAnd -> ">&"
     InOut -> "<>"

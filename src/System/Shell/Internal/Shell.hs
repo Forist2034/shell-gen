@@ -1,6 +1,7 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-partial-fields #-}
 
 module System.Shell.Internal.Shell
   ( Var (..),
@@ -137,10 +138,12 @@ quoteTerms ts =
 
 data RedirOp = In | Out | Append
 
-data Redir t m = Redir
-  { redirOp :: RedirOp,
-    redirTarget :: Term t m
-  }
+data Redir t m
+  = Redir
+      { redirOp :: RedirOp,
+        redirTarget :: Term t m
+      }
+  | RedirStr (Term t m)
 
 data Assign t m = Assign t (Term t m)
 

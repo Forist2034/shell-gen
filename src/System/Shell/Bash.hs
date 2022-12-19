@@ -227,6 +227,12 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
               SH.Append -> Append,
             redirTarget = termToWord t
           }
+      convRed (SH.RedirStr s) =
+        Redir
+          { redirDesc = Nothing,
+            redirOp = HereString,
+            redirTarget = termToWord s
+          }
   group (BS c) =
     BS
       (censor (\(Cmd v) -> Cmd [Command (Group (convToList (reverse v))) []]) c)
