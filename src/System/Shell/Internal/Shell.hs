@@ -163,6 +163,8 @@ data Test t m
   | TFileExists (Term t m)
   | TDirExists (Term t m)
   | TSymbolicLink (Term t m)
+  | TZeroStr (Term t m)
+  | TNonZeroStr (Term t m)
   | TStrEqual (Term t m) (Term t m)
   | TStrNotEqual (Term t m) (Term t m)
   | TStrMatch (Term t m) (Term t m)

@@ -204,6 +204,10 @@ instance (SH.ShellStr t, Quotable t) => SH.Shell t (BashScript t) where
         Binary (termToWord l) StrNE (termToWord r)
       convTest (SH.TStrMatch l r) =
         Binary (termToWord l) StrMatch (termToWord r)
+      convTest (SH.TZeroStr s) =
+        Unary ZeroString (termToWord s)
+      convTest (SH.TNonZeroStr s) =
+        Unary NonzeroString (termToWord s)
 
   setVar v =
     BS
