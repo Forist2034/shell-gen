@@ -7,6 +7,8 @@ module System.Shell.Internal.Shell
   ( Var (..),
     Arith (..),
     TrimMatch (..),
+    Direction (..),
+    ReplaceOpt (..),
     VarTerm (..),
     Term (..),
     var,
@@ -73,13 +75,23 @@ data TrimMatch
   | ShortestM
   deriving (Eq)
 
+data Direction
+  = PrefixD
+  | SuffixD
+
+data ReplaceOpt
+  = FirstM
+  | LastM
+  | AllM
+  deriving (Eq)
+
 data VarTerm t m
   = NormalVar
   | VarLength
   | Suffix (Term t m)
   | Substr (Term t m) (Term t m)
-  | TrimPrefix TrimMatch (Term t m)
-  | TrimSuffix TrimMatch (Term t m)
+  | Trim Direction TrimMatch (Term t m)
+  | Replace ReplaceOpt (Term t m) (Term t m)
 
 data Term t m
   = StrTerm t

@@ -89,51 +89,59 @@ termToWord :: (SH.Shell t m, Quotable t) => SH.Term t m -> Word t
 termToWord (SH.StrTerm t) = [Str t]
 termToWord (SH.ArithTerm at) = [ArithSubst (arithToStr at)]
 termToWord SH.EmptyTerm = []
-termToWord (SH.VarTerm v t) = case t of
-  SH.NormalVar -> [ParamSubst (Brace False (Parameter v Nothing))]
-  SH.VarLength -> [ParamSubst (Length (Parameter v Nothing))]
-  SH.Suffix o ->
-    [ ParamSubst
-        ( Substring
-            { indirect = False,
-              parameter = Parameter v Nothing,
-              subOffset = termToWord o,
-              subLength = []
-            }
-        )
-    ]
-  SH.Substr o l ->
-    [ ParamSubst
-        ( Substring
-            { indirect = False,
-              parameter = Parameter v Nothing,
-              subOffset = termToWord o,
-              subLength = termToWord l
-            }
-        )
-    ]
-  SH.TrimPrefix o p ->
-    [ ParamSubst
-        ( Delete
-            { indirect = False,
-              parameter = Parameter v Nothing,
-              longest = o == SH.LongestM,
-              deleteDirection = Front,
-              pattern = termToWord p
-            }
-        )
-    ]
-  SH.TrimSuffix o p ->
-    [ ParamSubst
-        ( Delete
-            { indirect = False,
-              parameter = Parameter v Nothing,
-              longest = o == SH.LongestM,
-              deleteDirection = Back,
-              pattern = termToWord p
-            }
-        )
-    ]
+termToWord (SH.VarTerm v t) =
+  let para = Parameter v Nothing
+   in case t of
+        SH.NormalVar -> [ParamSubst (Brace False para)]
+        SH.VarLength -> [ParamSubst (Length para)]
+        SH.Suffix o ->
+          [ ParamSubst
+              ( Substring
+                  { indirect = False,
+                    parameter = para,
+                    subOffset = termToWord o,
+                    subLength = []
+                  }
+              )
+          ]
+        SH.Substr o l ->
+          [ ParamSubst
+              ( Substring
+                  { indirect = False,
+                    parameter = para,
+                    subOffset = termToWord o,
+                    subLength = termToWord l
+                  }
+              )
+          ]
+        SH.Trim d o p ->
+          [ ParamSubst
+              ( Delete
+                  { indirect = False,
+                    parameter = para,
+                    longest = o == SH.LongestM,
+                    deleteDirection = case d of
+                      SH.PrefixD -> Front
+                      SH.SuffixD -> Back,
+                    pattern = termToWord p
+                  }
+              )
+          ]
+        SH.Replace opt p1 s ->
+          [ ParamSubst
+              ( Replace
+                  { indirect = False,
+                    parameter = para,
+                    replaceAll = opt == SH.AllM,
+                    replaceDirection = case opt of
+                      SH.FirstM -> Just Front
+                      SH.LastM -> Just Back
+                      SH.AllM -> Nothing,
+                    pattern = termToWord p1,
+                    replacement = termToWord s
+                  }
+              )
+          ]
 termToWord (SH.OutputTerm o) = [CommandSubst (SH.script Nothing o)]
 termToWord (SH.QuotedTerm t) =
   [ Double

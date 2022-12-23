@@ -11,6 +11,8 @@ module System.Shell
     TrimMatch (..),
     varTrimPrefix,
     varTrimSuffix,
+    ReplaceOpt (..),
+    varReplace,
     output,
     quote,
     quoteTerms,
@@ -54,10 +56,13 @@ varSubstr :: Var t -> Term t m -> Term t m -> Term t m
 varSubstr (Var v) o l = VarTerm v (Substr o l)
 
 varTrimPrefix :: Var t -> TrimMatch -> Term t m -> Term t m
-varTrimPrefix (Var v) tm p = VarTerm v (TrimPrefix tm p)
+varTrimPrefix (Var v) tm p = VarTerm v (Trim PrefixD tm p)
 
 varTrimSuffix :: Var t -> TrimMatch -> Term t m -> Term t m
-varTrimSuffix (Var v) tm p = VarTerm v (TrimSuffix tm p)
+varTrimSuffix (Var v) tm p = VarTerm v (Trim SuffixD tm p)
+
+varReplace :: Var t -> ReplaceOpt -> Term t m -> Term t m -> Term t m
+varReplace (Var v) opt p r = VarTerm v (Replace opt p r)
 
 (@=) :: Var t -> Term t m2 -> Assign t m2
 (Var a) @= b = Assign a b
